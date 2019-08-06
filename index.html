@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ulster University | WhiteBoard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fa-thumbtack {
+            cursor: pointer;
+        }
+        .fa-thumbtack:not(.pinned) {
+            color: lightgray;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Ulster University</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto pins">
+                <li class="nav-item">
+                    <a class="nav-link" href="#COM308">COM308 Human Computer Interaction</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#COM182">COM182 Systems in Organisations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#COM187">COM187 Software Development II</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarMoreDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        More
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarMoreDropdown">
+                        <a class="dropdown-item" href="#COM181">COM181 Computer Hardware
+                            <i class="fa fa-thumbtack"></i>
+                        </a>
+                        <a class="dropdown-item" href="#COM182">COM182 Systems in Organisations
+                            <i class="fa fa-thumbtack pinned"></i>
+                        </a>
+                        <a class="dropdown-item" href="#COM186">COM186 Software Development I
+                            <i class="fa fa-thumbtack"></i>
+                        </a>
+                        <a class="dropdown-item" href="#COM187">COM187 Software Development II
+                            <i class="fa fa-thumbtack pinned"></i>
+                        </a>
+                        <a class="dropdown-item" href="#COM188">COM188 Study Skills & Prof Issues
+                            <i class="fa fa-thumbtack"></i>
+                        </a>
+                        <a class="dropdown-item" href="#COM206">COM206 Mathematics for Computing
+                            <i class="fa fa-thumbtack"></i>
+                        </a>
+                        <a class="dropdown-item" href="#COM308">COM308 Human Computer Interaction
+                            <i class="fa fa-thumbtack pinned"></i>
+                        </a>
+                        <a class="dropdown-item" href="#COM342">COM342 Networks
+                            <i class="fa fa-thumbtack"></i>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $('.fa-thumbtack').click(function (e) {
+            $(this).toggleClass('pinned').show();
+            updatePins();
+            e.stopPropagation();
+        });
+        $('.fa-thumbtack').parent().mouseenter(function() {
+            if($('.pinned').length < 3) $(this).find('.fa-thumbtack').show();
+        }).mouseleave(function() {
+            $(this).find('.fa-thumbtack:not(.pinned)').hide();
+        });
+
+        function updatePins() {
+            $('.pins').empty();
+            $('.pinned').parent().each(function() {
+                var li = document.createElement('li');
+                li.classList.add('nav-item');
+                var a = document.createElement('a');
+                a.classList.add('nav-link');
+                a.href = this.href;
+                a.innerHTML = this.innerText;
+                li.appendChild(a);
+                $('.pins').append(li);
+            })
+        }
+    </script>
+</body>
+
+</html>
