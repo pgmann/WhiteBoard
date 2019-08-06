@@ -9,9 +9,19 @@
         .fa-thumbtack {
             cursor: pointer;
         }
+
         .fa-thumbtack:not(.pinned) {
             color: lightgray;
             display: none;
+        }
+
+        .feed .fa {
+            width: 20px;
+            margin-right: 5px;
+        }
+
+        .faded {
+            color: gray;
         }
     </style>
 </head>
@@ -25,17 +35,7 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto pins">
-                <li class="nav-item">
-                    <a class="nav-link" href="#COM308">COM308 Human Computer Interaction</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#COM182">COM182 Systems in Organisations</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#COM187">COM187 Software Development II</a>
-                </li>
-            </ul>
+            <ul class="navbar-nav mr-auto pins"></ul>
 
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
@@ -74,27 +74,27 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="mt-4 container feed">
 
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script>
+        // PINS
         $('.fa-thumbtack').click(function (e) {
             $(this).toggleClass('pinned').show();
             updatePins();
             e.stopPropagation();
         });
-        $('.fa-thumbtack').parent().mouseenter(function() {
-            if($('.pinned').length < 3) $(this).find('.fa-thumbtack').show();
-        }).mouseleave(function() {
+        $('.fa-thumbtack').parent().mouseenter(function () {
+            if ($('.pinned').length < 3) $(this).find('.fa-thumbtack').show();
+        }).mouseleave(function () {
             $(this).find('.fa-thumbtack:not(.pinned)').hide();
         });
-
         function updatePins() {
             $('.pins').empty();
-            $('.pinned').parent().each(function() {
+            $('.pinned').parent().each(function () {
                 var li = document.createElement('li');
                 li.classList.add('nav-item');
                 var a = document.createElement('a');
@@ -105,6 +105,94 @@
                 $('.pins').append(li);
             })
         }
+        updatePins();
+
+        // FEED
+        // event format
+        // {
+        //      type: 'assignment/grade/announcement/content/comment',
+        //      class: 'COM308 Human Computer Interaction',
+        //      title: '<text>',
+        //      time: <date/time>
+        // }
+        function addToFeed(event) {
+            var row = document.createElement('div');
+            row.classList.add('mb-3');
+            var icon = document.createElement('i');
+            icon.classList.add('fa');
+            row.appendChild(icon);
+            var text = document.createElement('span');
+            row.appendChild(text);
+            var module = document.createElement('span');
+            module.innerText = ' - ' + event.class;
+            module.classList.add('faded');
+            row.appendChild(module);
+            $('.feed').append(row);
+
+            switch (event.type) {
+                case 'assignment':
+                    icon.classList.add('fa-file-alt');
+                    var dateOptions = { weekday: 'short', day: 'numeric', month: 'long' };
+                    if (event.time.getFullYear() != new Date().getFullYear()) dateOptions.year = 'numeric';
+                    var date = event.time.toLocaleString(undefined, dateOptions);
+                    var timeOptions = { hour: 'numeric', hour12: true };
+                    if (event.time.getMinutes() != 0) timeOptions.minute = '2-digit';
+                    if (event.time.getSeconds() != 0) timeOptions.second = '2-digit';
+                    var time = event.time.toLocaleString(undefined, timeOptions);
+                    text.innerHTML = 'Assignment <b>' + event.title + '</b> due on <b>' + date + '</b> at <b>' + time + '</b>';
+                    break;
+
+                case 'grade':
+                    icon.classList.add('fa-star');
+                    text.innerHTML = 'Grade available for <b>' + event.title + '</b>';
+                    break;
+
+                case 'announcement':
+                    icon.classList.add('fa-bullhorn');
+                    text.innerHTML = 'Class announcement - <b>' + event.title + '</b>';
+                    break;
+
+                case 'content':
+                    icon.classList.add('fa-plus-square');
+                    text.innerHTML = 'New class content added - <b>' + event.title + '</b>';
+                    break;
+
+                case 'comment':
+                    icon.classList.add('fa-comment-alt');
+                    text.innerHTML = 'Comment posted by <b>' + event.title + '</b>';
+                    break;
+            }
+        }
+        addToFeed({
+            type: 'assignment',
+            class: 'COM308 Human Computer Interaction',
+            title: 'CW2 Storyboards',
+            time: new Date(2019, 8, 5, 17, 0, 0)
+        });
+        addToFeed({
+            type: 'grade',
+            class: 'COM308 Human Computer Interaction',
+            title: 'Class Test',
+            time: Date.now()
+        });
+        addToFeed({
+            type: 'announcement',
+            class: 'COM308 Human Computer Interaction',
+            title: 'See you all in August!',
+            time: Date.now()
+        });
+        addToFeed({
+            type: 'content',
+            class: 'COM308 Human Computer Interaction',
+            title: 'Lecture - slides on universal design',
+            time: Date.now()
+        });
+        addToFeed({
+            type: 'comment',
+            class: 'COM308 Human Computer Interaction',
+            title: 'Peter Gordon - This is a test',
+            time: Date.now()
+        });
     </script>
 </body>
 
