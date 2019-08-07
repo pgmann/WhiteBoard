@@ -15,13 +15,27 @@
             display: none;
         }
 
-        .feed .fa {
+        #content .feed-icon {
             width: 20px;
             margin-right: 5px;
         }
 
         .faded {
             color: gray;
+        }
+
+        .lecturer-card {
+            display: flex;
+            word-break: break-all;
+        }
+
+        .lecturer-card .fa-user {
+            background: lightgray;
+            color: darkgray;
+            float: left;
+            padding: 25px;
+            margin-right: 10px;
+            margin-bottom: auto;
         }
     </style>
 </head>
@@ -43,69 +57,182 @@
                         aria-expanded="false">
                         More
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarMoreDropdown">
-                        <a class="dropdown-item" href="#COM181">COM181 Computer Hardware
-                            <i class="fa fa-thumbtack"></i>
-                        </a>
-                        <a class="dropdown-item" href="#COM182">COM182 Systems in Organisations
-                            <i class="fa fa-thumbtack pinned"></i>
-                        </a>
-                        <a class="dropdown-item" href="#COM186">COM186 Software Development I
-                            <i class="fa fa-thumbtack"></i>
-                        </a>
-                        <a class="dropdown-item" href="#COM187">COM187 Software Development II
-                            <i class="fa fa-thumbtack pinned"></i>
-                        </a>
-                        <a class="dropdown-item" href="#COM188">COM188 Study Skills & Prof Issues
-                            <i class="fa fa-thumbtack"></i>
-                        </a>
-                        <a class="dropdown-item" href="#COM206">COM206 Mathematics for Computing
-                            <i class="fa fa-thumbtack"></i>
-                        </a>
-                        <a class="dropdown-item" href="#COM308">COM308 Human Computer Interaction
-                            <i class="fa fa-thumbtack pinned"></i>
-                        </a>
-                        <a class="dropdown-item" href="#COM342">COM342 Networks
-                            <i class="fa fa-thumbtack"></i>
-                        </a>
-                    </div>
+                    <div id="classes" class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarMoreDropdown"></div>
                 </li>
             </ul>
         </div>
     </nav>
 
-    <div class="mt-4 container feed">
-
-    </div>
+    <div id="content" class="mt-4 container"></div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script>
-        // PINS
-        $('.fa-thumbtack').click(function (e) {
-            $(this).toggleClass('pinned').show();
+        // DATA
+        // in the real application, this data would get pulled from a server
+        var classes = {
+            COM181: {
+                id: 'COM181',
+                name: 'COM181 Computer Hardware',
+                times: [
+                    '9:15 - 17:15 Wed 27th June - Fri 29th June 2018',
+                    '9:15 - 17:15 Wed 1st August - Fri 3rd August 2018'
+                ],
+                lecturers: [
+                    'Dr George Martin'
+                ]
+            },
+            COM182: {
+                id: 'COM182',
+                name: 'COM182 Systems in Organisations',
+                pinned: true,
+                times: [
+                    '15:15 - 19:15 Every Wed from 30th Jan - 17th April 2019 (12 weeks)'
+                ],
+                lecturers: [
+                    {
+                        name: 'Dr Jonathan Synnott',
+                        role: 'Module Coordinator',
+                        details: 'Room: 16E07\nEmail: j.synnott@ulster.ac.uk'
+                    },
+                    {
+                        name: 'Dr Samuel Moore',
+                        role: 'Lecturer'
+                    }
+                ]
+            },
+            COM186: {
+                id: 'COM186',
+                name: 'COM186 Software Development I',
+                times: [
+                    '13:15 - 17:15 Every Wed from 31st January - 21st March 2018 (8 weeks)',
+                    '13:15 - 17:15 Every Wed from 11th April - 2nd May 2018 (4 weeks)'
+                ],
+                lecturers: [
+                    'Dr Omar Nibouche'
+                ]
+            },
+            COM187: {
+                id: 'COM187',
+                name: 'COM187 Software Development II',
+                pinned: true,
+                times: [
+                    '15:15 - 20:15 Every Wed from 26th September - 12th December 2018 (12 weeks)'
+                ],
+                lecturers: [
+                    {
+                        name: 'Dr Simon Fraser',
+                        role: 'Module Coordinator',
+                        details: 'Room: 16G03\nEmail: sg.fraser@ulster.ac.uk'
+                    }
+                ]
+            },
+            COM188: {
+                id: 'COM188',
+                name: 'COM188 Study Skills & Prof Issues',
+                times: [
+                    '15:15 - 17:15 Every Wed from 27th September - 13th December 2017 (12 weeks)',
+                    '17:15 - 19:15 Wed 27th September 2017',
+                    '18:15 - 20:15 Wed 15th November 2017',
+                    '18:15 - 20:15 Every Wed from 29th November - 13th December 2017 (3 weeks)'
+                ],
+                lecturers: [
+                    'Dr Jose Santos'
+                ]
+            },
+            COM206: {
+                id: 'COM206',
+                name: 'COM206 Mathematics for Computing',
+                times: [
+                    '13:15 - 15:15 Every Wed from 27th September - 13th December 2017 (12 weeks)',
+                    '17:15 - 19:15 Every Wed from 31st January - 21st March 2018 (8 weeks)',
+                    '17:15 - 19:15 Every Wed from 11th April - 2nd May 2018 (4 weeks)'
+                ],
+                lecturers: [
+                    'Dr Glenn Hawe'
+                ]
+            },
+            COM308: {
+                id: 'COM308',
+                name: 'COM308 Human Computer Interaction',
+                pinned: true,
+                times: [
+                    '9:15 – 17:15 Mon 24th June – Wed 26th June 2019',
+                    '9:15 – 17:15 Mon 5th August – Wed 7th August 2019'
+                ],
+                lecturers: [
+                    {
+                        name: 'Dr Gaye Lightbody',
+                        role: 'Module Coordinator',
+                        details: 'Room: 16E04\nEmail: g.lightbody@ulster.ac.uk'
+                    },
+                    {
+                        name: 'Prof Jonathan Wallace',
+                        role: 'Guest Lecturer'
+                    }
+                ]
+            },
+            COM342: {
+                id: 'COM342',
+                name: 'COM342 Networks',
+                times: [
+                    '13:15 - 15:15 Every Wed from 30th Jan - 17th April 2019 (12 weeks)',
+                    '13:15 - 15:15 Every Wed from 26th September - 12th December 2018 (12 weeks)'
+                ],
+                lecturers: [
+                    'Dr Aaron McConville'
+                ]
+            }
+        };
+        var currentClass = null;
+
+        // ALL CLASSES LIST
+        function updateClasses(classes) {
+            // Updates the list of classes in the 'More' dropdown menu from nav bar
+            var container = $('#classes').empty();
+            for (var clazz of Object.values(classes)) {
+                var a = document.createElement('a');
+                a.classList.add('dropdown-item', 'class-link');
+                a.href = '#' + clazz.id;
+                a.innerHTML = clazz.name + ' <i class="fa fa-thumbtack' + (clazz.pinned ? ' pinned' : '') + '"></i>';
+                $(a).mouseenter(function () {
+                    if ($('.pinned').length < 3) $(this).find('.fa-thumbtack').show();
+                }).mouseleave(function () {
+                    $(this).find('.fa-thumbtack:not(.pinned)').hide();
+                });
+                container.append(a);
+            }
+            // Make sure the pinned items in the nav bar are up to date
             updatePins();
-            e.stopPropagation();
-        });
-        $('.fa-thumbtack').parent().mouseenter(function () {
-            if ($('.pinned').length < 3) $(this).find('.fa-thumbtack').show();
-        }).mouseleave(function () {
-            $(this).find('.fa-thumbtack:not(.pinned)').hide();
-        });
+            $('.fa-thumbtack').click(function (e) {
+                var clazz = classes[this.parentElement.hash.substr(1)];
+                clazz.pinned = !clazz.pinned;
+                $(this).toggleClass('pinned').show();
+                updatePins();
+                e.stopPropagation();
+            });
+        }
+        updateClasses(classes);
+
+        // PINS
         function updatePins() {
+            // Creates a link in the main nav bar for each pinned class
             $('.pins').empty();
             $('.pinned').parent().each(function () {
                 var li = document.createElement('li');
                 li.classList.add('nav-item');
                 var a = document.createElement('a');
-                a.classList.add('nav-link');
+                a.classList.add('nav-link', 'class-link');
                 a.href = this.href;
                 a.innerHTML = this.innerText;
                 li.appendChild(a);
                 $('.pins').append(li);
-            })
+            });
+            $('.class-link').unbind('click').click(function () {
+                switchPage(classes[this.hash.substr(1)], 'home');
+            });
+            updateActiveClass();
         }
-        updatePins();
 
         // FEED
         // event format
@@ -116,10 +243,11 @@
         //      time: <date/time>
         // }
         function addToFeed(event) {
+            // Create elements for feed row
             var row = document.createElement('div');
             row.classList.add('mb-3');
             var icon = document.createElement('i');
-            icon.classList.add('fa');
+            icon.classList.add('fa', 'feed-icon');
             row.appendChild(icon);
             var text = document.createElement('span');
             row.appendChild(text);
@@ -127,8 +255,9 @@
             module.innerText = ' - ' + event.class;
             module.classList.add('faded');
             row.appendChild(module);
-            $('.feed').append(row);
+            $('#content').append(row);
 
+            // Set row icon, description and date/time formatting depending on event type
             switch (event.type) {
                 case 'assignment':
                     icon.classList.add('fa-file-alt');
@@ -138,7 +267,7 @@
                     var timeOptions = { hour: 'numeric', hour12: true };
                     if (event.time.getMinutes() != 0) timeOptions.minute = '2-digit';
                     if (event.time.getSeconds() != 0) timeOptions.second = '2-digit';
-                    var time = event.time.toLocaleString(undefined, timeOptions);
+                    var time = event.time.toLocaleString(undefined, timeOptions).replace(/ /g, '');
                     text.innerHTML = 'Assignment <b>' + event.title + '</b> due on <b>' + date + '</b> at <b>' + time + '</b>';
                     break;
 
@@ -163,36 +292,87 @@
                     break;
             }
         }
-        addToFeed({
-            type: 'assignment',
-            class: 'COM308 Human Computer Interaction',
-            title: 'CW2 Storyboards',
-            time: new Date(2019, 8, 5, 17, 0, 0)
+        function loadFeed() {
+            // Load initial entries into feed
+            addToFeed({
+                type: 'assignment',
+                class: 'COM308 Human Computer Interaction',
+                title: 'CW2 Storyboards',
+                time: new Date(2019, 8, 5, 17, 0, 0)
+            });
+            addToFeed({
+                type: 'grade',
+                class: 'COM308 Human Computer Interaction',
+                title: 'Class Test',
+                time: Date.now()
+            });
+            addToFeed({
+                type: 'announcement',
+                class: 'COM308 Human Computer Interaction',
+                title: 'See you all in August!',
+                time: Date.now()
+            });
+            addToFeed({
+                type: 'content',
+                class: 'COM308 Human Computer Interaction',
+                title: 'Lecture - slides on universal design',
+                time: Date.now()
+            });
+            addToFeed({
+                type: 'comment',
+                class: 'COM308 Human Computer Interaction',
+                title: 'Peter Gordon - This is a test',
+                time: Date.now()
+            });
+        }
+
+        // PAGE SWITCHING
+        $('.navbar-brand').click(function () {
+            switchPage();
         });
-        addToFeed({
-            type: 'grade',
-            class: 'COM308 Human Computer Interaction',
-            title: 'Class Test',
-            time: Date.now()
-        });
-        addToFeed({
-            type: 'announcement',
-            class: 'COM308 Human Computer Interaction',
-            title: 'See you all in August!',
-            time: Date.now()
-        });
-        addToFeed({
-            type: 'content',
-            class: 'COM308 Human Computer Interaction',
-            title: 'Lecture - slides on universal design',
-            time: Date.now()
-        });
-        addToFeed({
-            type: 'comment',
-            class: 'COM308 Human Computer Interaction',
-            title: 'Peter Gordon - This is a test',
-            time: Date.now()
-        });
+
+        function updateActiveClass() {
+            $(".class-link").removeClass('active');
+            if (currentClass) $(".class-link[href$='#" + currentClass.id + "']").addClass('active');
+        }
+
+        function switchPage(clazz, page) {
+            console.log('Page Switch:', clazz, page);
+            currentClass = clazz;
+            updateActiveClass();
+            var content = $('#content').empty();
+            if (!clazz) {
+                loadFeed();
+                return;
+            }
+            switch (page) {
+                case 'home':
+                    var schedule = '';
+                    for (var time of clazz.times) schedule += '<li>' + time + '</li>';
+                    var staff = '';
+                    for (var user of clazz.lecturers) {
+                        staff += '<div class="col-sm-6 lecturer-card"><i class="fa fa-user fa-3x"></i><div>';
+                        if(!user.hasOwnProperty('name')) {
+                            staff += '<b>' + user + '</b>'; // user is a String containing the lecturer's name
+                        } else {
+                            staff += '<b>' + user.name + '</b>';
+                            if(user.hasOwnProperty('role')) staff += '<br><i>' + user.role + '</i>';
+                            if(user.hasOwnProperty('details')) staff += '<br>' + user.details.replace(/\n/g, '<br>\n');
+                        }
+                        staff += '</div></div>';
+                    }
+                    content.html('<h1>' + clazz.name + '</h1>' +
+                        'Please use the links on the left menu to navigate through the module content. The Module Handbook is available. ' +
+                        'Module content is presented in daily order under the menu title Learning Materials.' +
+                        '<h2 class="mt-4">Timetable</h2>' +
+                        '<ul>' + schedule + '</ul>' +
+                        '<h2 class="mt-4">Lecturers</h2>' +
+                        '<div class="row">' + staff + '</div>'
+                    );
+                    break;
+            }
+        }
+        switchPage();
     </script>
 </body>
 
