@@ -6,6 +6,34 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet">
     <style>
+        nav.navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 5px black;
+        }
+
+        @media (min-width: 992px) {
+            .pins {
+                flex-wrap: wrap;
+                max-height: 2.5em;
+                overflow: hidden;
+            }
+        }
+
+        nav.sidebar {
+            position: sticky;
+            top: 0;
+            height: calc(100vh - 48px);
+            overflow-y: auto;
+            display: none;
+        }
+
+        #classes {
+            max-height: calc(100vh - 48px);
+            overflow: auto;
+        }
+
         .fa-thumbtack {
             cursor: pointer;
         }
@@ -63,7 +91,17 @@
         </div>
     </nav>
 
-    <div id="content" class="mt-4 container"></div>
+    <div class="row">
+        <nav class="col-md-2 bg-light sidebar">
+            <h6 id="class-name" class="mt-4 px-3"></h6>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active"><i class="fa fa-home"></i> Homepage</a>
+                </li>
+            </ul>
+        </nav>
+        <div id="content" class="mt-4 pl-4 container col-md-9 col-lg-10"></div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
@@ -333,7 +371,14 @@
 
         function updateActiveClass() {
             $(".class-link").removeClass('active');
-            if (currentClass) $(".class-link[href$='#" + currentClass.id + "']").addClass('active');
+            if (!currentClass) {
+                $('.sidebar').hide();
+            } else {
+                $(".class-link[href$='#" + currentClass.id + "']").addClass('active');
+                $('#class-name').text(currentClass.name);
+                $('.sidebar').show();
+            }
+
         }
 
         function switchPage(clazz, page) {
@@ -345,6 +390,7 @@
                 loadFeed();
                 return;
             }
+            if (!page) page = 'home';
             switch (page) {
                 case 'home':
                     var schedule = '';
@@ -372,7 +418,10 @@
                     break;
             }
         }
-        switchPage();
+        // Switch to requested page from hash parameter
+        var classCode = window.location.hash.substr(1);
+        if(classCode && classes.hasOwnProperty(classCode)) switchPage(classes[classCode]);
+        else switchPage();
     </script>
 </body>
 
