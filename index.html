@@ -13,6 +13,12 @@
             box-shadow: 0 1px 5px black;
         }
 
+        nav.sidebar {
+            overflow-y: auto;
+            display: none;
+            height: 100%;
+        }
+
         @media (min-width: 992px) {
             .pins {
                 flex-wrap: wrap;
@@ -21,20 +27,15 @@
             }
         }
         @media (min-width: 768px) {
-            .sidebar {
-                height: calc(100vh - 48px);
+            nav.sidebar {
+                height: calc(100vh - 56px);
                 position: sticky;
-                top: 0;
+                top: 56px;
             }
         }
 
-        nav.sidebar {
-            overflow-y: auto;
-            display: none;
-        }
-
         #classes {
-            max-height: calc(100vh - 48px);
+            max-height: calc(100vh - 56px);
             overflow: auto;
         }
 
