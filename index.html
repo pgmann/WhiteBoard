@@ -20,11 +20,15 @@
                 overflow: hidden;
             }
         }
+        @media (min-width: 768px) {
+            .sidebar {
+                height: calc(100vh - 48px);
+                position: sticky;
+                top: 0;
+            }
+        }
 
         nav.sidebar {
-            position: sticky;
-            top: 0;
-            height: calc(100vh - 48px);
             overflow-y: auto;
             display: none;
         }
@@ -91,16 +95,18 @@
         </div>
     </nav>
 
-    <div class="row">
-        <nav class="col-md-2 bg-light sidebar">
-            <h6 id="class-name" class="mt-4 px-3"></h6>
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link active"><i class="fa fa-home"></i> Homepage</a>
-                </li>
-            </ul>
-        </nav>
-        <div id="content" class="mt-4 pl-4 container col-md-9 col-lg-10"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 bg-light sidebar">
+                <h6 id="class-name" class="mt-4"></h6>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active"><i class="fa fa-home"></i> Homepage</a>
+                    </li>
+                </ul>
+            </nav>
+            <div id="content" class="mt-4 px-4 col-md-9 col-lg-10"></div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -397,7 +403,7 @@
                     for (var time of clazz.times) schedule += '<li>' + time + '</li>';
                     var staff = '';
                     for (var user of clazz.lecturers) {
-                        staff += '<div class="col-sm-6 lecturer-card"><i class="fa fa-user fa-3x"></i><div>';
+                        staff += '<div class="col-sm-6 lecturer-card mb-4"><i class="fa fa-user fa-3x"></i><div>';
                         if(!user.hasOwnProperty('name')) {
                             staff += '<b>' + user + '</b>'; // user is a String containing the lecturer's name
                         } else {
