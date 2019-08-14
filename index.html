@@ -19,6 +19,14 @@
             height: 100%;
         }
 
+        .sidebar .nav-link {
+            color: black;
+        }
+
+        a.bg-light.active {
+            background-color: #dae0e5!important;
+        }
+
         @media (min-width: 992px) {
             .pins {
                 flex-wrap: wrap;
@@ -26,6 +34,7 @@
                 overflow: hidden;
             }
         }
+
         @media (min-width: 768px) {
             nav.sidebar {
                 height: calc(100vh - 56px);
@@ -98,11 +107,18 @@
 
     <div class="container-fluid">
         <div class="row">
-            <nav class="col-md-2 bg-light sidebar">
+            <nav class="col-md-3 col-lg-2 bg-light sidebar">
                 <h6 id="class-name" class="mt-4"></h6>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active"><i class="fa fa-home"></i> Homepage</a>
+                        <a href="#" class="home nav-link bg-light active">
+                            <i class="fa fa-home"></i> Homepage</a>
+                        <a href="#" class="assignments nav-link bg-light">
+                            <i class="fa fa-star"></i> Assignments</a>
+                        <a href="#" class="announcements nav-link bg-light">
+                            <i class="fa fa-bullhorn"></i> Announcements</a>
+                        <a class="content nav-link bg-light">
+                            <i class="fa fa-folder-open"></i> Content</a>
                     </li>
                 </ul>
             </nav>
@@ -112,130 +128,16 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="data.js"></script>
     <script>
-        // DATA
-        // in the real application, this data would get pulled from a server
-        var classes = {
-            COM181: {
-                id: 'COM181',
-                name: 'COM181 Computer Hardware',
-                times: [
-                    '9:15 - 17:15 Wed 27th June - Fri 29th June 2018',
-                    '9:15 - 17:15 Wed 1st August - Fri 3rd August 2018'
-                ],
-                lecturers: [
-                    'Dr George Martin'
-                ]
-            },
-            COM182: {
-                id: 'COM182',
-                name: 'COM182 Systems in Organisations',
-                pinned: true,
-                times: [
-                    '15:15 - 19:15 Every Wed from 30th Jan - 17th April 2019 (12 weeks)'
-                ],
-                lecturers: [
-                    {
-                        name: 'Dr Jonathan Synnott',
-                        role: 'Module Coordinator',
-                        details: 'Room: 16E07\nEmail: j.synnott@ulster.ac.uk'
-                    },
-                    {
-                        name: 'Dr Samuel Moore',
-                        role: 'Lecturer'
-                    }
-                ]
-            },
-            COM186: {
-                id: 'COM186',
-                name: 'COM186 Software Development I',
-                times: [
-                    '13:15 - 17:15 Every Wed from 31st January - 21st March 2018 (8 weeks)',
-                    '13:15 - 17:15 Every Wed from 11th April - 2nd May 2018 (4 weeks)'
-                ],
-                lecturers: [
-                    'Dr Omar Nibouche'
-                ]
-            },
-            COM187: {
-                id: 'COM187',
-                name: 'COM187 Software Development II',
-                pinned: true,
-                times: [
-                    '15:15 - 20:15 Every Wed from 26th September - 12th December 2018 (12 weeks)'
-                ],
-                lecturers: [
-                    {
-                        name: 'Dr Simon Fraser',
-                        role: 'Module Coordinator',
-                        details: 'Room: 16G03\nEmail: sg.fraser@ulster.ac.uk'
-                    }
-                ]
-            },
-            COM188: {
-                id: 'COM188',
-                name: 'COM188 Study Skills & Prof Issues',
-                times: [
-                    '15:15 - 17:15 Every Wed from 27th September - 13th December 2017 (12 weeks)',
-                    '17:15 - 19:15 Wed 27th September 2017',
-                    '18:15 - 20:15 Wed 15th November 2017',
-                    '18:15 - 20:15 Every Wed from 29th November - 13th December 2017 (3 weeks)'
-                ],
-                lecturers: [
-                    'Dr Jose Santos'
-                ]
-            },
-            COM206: {
-                id: 'COM206',
-                name: 'COM206 Mathematics for Computing',
-                times: [
-                    '13:15 - 15:15 Every Wed from 27th September - 13th December 2017 (12 weeks)',
-                    '17:15 - 19:15 Every Wed from 31st January - 21st March 2018 (8 weeks)',
-                    '17:15 - 19:15 Every Wed from 11th April - 2nd May 2018 (4 weeks)'
-                ],
-                lecturers: [
-                    'Dr Glenn Hawe'
-                ]
-            },
-            COM308: {
-                id: 'COM308',
-                name: 'COM308 Human Computer Interaction',
-                pinned: true,
-                times: [
-                    '9:15 – 17:15 Mon 24th June – Wed 26th June 2019',
-                    '9:15 – 17:15 Mon 5th August – Wed 7th August 2019'
-                ],
-                lecturers: [
-                    {
-                        name: 'Dr Gaye Lightbody',
-                        role: 'Module Coordinator',
-                        details: 'Room: 16E04\nEmail: g.lightbody@ulster.ac.uk'
-                    },
-                    {
-                        name: 'Prof Jonathan Wallace',
-                        role: 'Guest Lecturer'
-                    }
-                ]
-            },
-            COM342: {
-                id: 'COM342',
-                name: 'COM342 Networks',
-                times: [
-                    '13:15 - 15:15 Every Wed from 30th Jan - 17th April 2019 (12 weeks)',
-                    '13:15 - 15:15 Every Wed from 26th September - 12th December 2018 (12 weeks)'
-                ],
-                lecturers: [
-                    'Dr Aaron McConville'
-                ]
-            }
-        };
         var currentClass = null;
 
         // ALL CLASSES LIST
         function updateClasses(classes) {
-            // Updates the list of classes in the 'More' dropdown menu from nav bar
+            // Update the list of classes in the 'More' dropdown menu from nav bar
             var container = $('#classes').empty();
-            for (var clazz of Object.values(classes)) {
+            for (var i in classes) {
+                var clazz = classes[i];
                 var a = document.createElement('a');
                 a.classList.add('dropdown-item', 'class-link');
                 a.href = '#' + clazz.id;
@@ -255,13 +157,14 @@
                 $(this).toggleClass('pinned').show();
                 updatePins();
                 e.stopPropagation();
+                e.preventDefault();
             });
         }
         updateClasses(classes);
 
         // PINS
         function updatePins() {
-            // Creates a link in the main nav bar for each pinned class
+            // Create a link in the main nav bar for each pinned class
             $('.pins').empty();
             $('.pinned').parent().each(function () {
                 var li = document.createElement('li');
@@ -272,9 +175,6 @@
                 a.innerHTML = this.innerText;
                 li.appendChild(a);
                 $('.pins').append(li);
-            });
-            $('.class-link').unbind('click').click(function () {
-                switchPage(classes[this.hash.substr(1)], 'home');
             });
             updateActiveClass();
         }
@@ -337,80 +237,61 @@
                     break;
             }
         }
-        function loadFeed() {
-            // Load initial entries into feed
-            addToFeed({
-                type: 'assignment',
-                class: 'COM308 Human Computer Interaction',
-                title: 'CW2 Storyboards',
-                time: new Date(2019, 8, 5, 17, 0, 0)
-            });
-            addToFeed({
-                type: 'grade',
-                class: 'COM308 Human Computer Interaction',
-                title: 'Class Test',
-                time: Date.now()
-            });
-            addToFeed({
-                type: 'announcement',
-                class: 'COM308 Human Computer Interaction',
-                title: 'See you all in August!',
-                time: Date.now()
-            });
-            addToFeed({
-                type: 'content',
-                class: 'COM308 Human Computer Interaction',
-                title: 'Lecture - slides on universal design',
-                time: Date.now()
-            });
-            addToFeed({
-                type: 'comment',
-                class: 'COM308 Human Computer Interaction',
-                title: 'Peter Gordon - This is a test',
-                time: Date.now()
-            });
-        }
 
         // PAGE SWITCHING
-        $('.navbar-brand').click(function () {
-            switchPage();
-        });
-
         function updateActiveClass() {
             $(".class-link").removeClass('active');
             if (!currentClass) {
                 $('.sidebar').hide();
             } else {
+                // update navbar state
                 $(".class-link[href$='#" + currentClass.id + "']").addClass('active');
                 $('#class-name').text(currentClass.name);
+                // update sidebar links
+                $('.sidebar .home').attr('href', '#' + currentClass.id);
+                $('.sidebar .assignments').attr('href', '#' + currentClass.id + '/assignments');
+                $('.sidebar .announcements').attr('href', '#' + currentClass.id + '/announcements');
+                // update sidebar state
                 $('.sidebar').show();
+                $('.sidebar .nav-link').removeClass('active').filter('.' + currentSection).addClass('active');
+                // load content folder sub entries
+                $('.sidebar .content')
             }
-
         }
 
         function switchPage(clazz, page) {
-            console.log('Page Switch:', clazz, page);
+            // Handle page state variables
+            console.log('Page Switch:', clazz, decodeURI(page));
             currentClass = clazz;
+            if (!page) page = 'home';
+            page = decodeURI(page).split('/');
+            currentSection = page.shift();
+            currentSubpage = page.join('/');
+
+            // update navbar and sidebar
             updateActiveClass();
             var content = $('#content').empty();
+            $('.navbar .navbar-collapse').collapse('hide');
+
+            // show relevant content
             if (!clazz) {
                 loadFeed();
                 return;
             }
-            if (!page) page = 'home';
-            switch (page) {
+            switch (currentSection) {
                 case 'home':
                     var schedule = '';
-                    for (var time of clazz.times) schedule += '<li>' + time + '</li>';
+                    for (var i in clazz.times) schedule += '<li>' + clazz.times[i] + '</li>';
                     var staff = '';
-                    for (var user of clazz.lecturers) {
+                    for (var i in clazz.lecturers) {
+                        var user = clazz.lecturers[i];
                         staff += '<div class="col-sm-6 lecturer-card mb-4"><i class="fa fa-user fa-3x"></i><div>';
-                        if(!user.hasOwnProperty('name')) {
+                        if (!user.hasOwnProperty('name')) {
                             staff += '<b>' + user + '</b>'; // user is a String containing the lecturer's name
                         } else {
                             staff += '<b>' + user.name + '</b>';
-                            if(user.hasOwnProperty('role')) staff += '<br><i>' + user.role + '</i>';
-                            if(user.hasOwnProperty('details')) staff += '<br>' + user.details.replace(/\n/g, '<br>\n');
+                            if (user.hasOwnProperty('role')) staff += '<br><i>' + user.role + '</i>';
+                            if (user.hasOwnProperty('details')) staff += '<br>' + user.details.replace(/\n/g, '<br>\n');
                         }
                         staff += '</div></div>';
                     }
@@ -423,12 +304,122 @@
                         '<div class="row">' + staff + '</div>'
                     );
                     break;
+                case 'assignments':
+                    // Assignment/test format example:
+                    // {
+                    //     name: <String>>,
+                    //     description: <String>,
+                    //     type: <Assignment/Test>,
+                    //     due: 'dd/mm/yyyy hh:mm',
+                    //     submission: {
+                    //         content: <String>,
+                    //         submitted: 'dd/mm/yyyy hh:mm',
+                    //         graded: 'dd/mm/yyyy hh:mm',
+                    //         score: <number>
+                    //     },
+                    //     worth: <number>
+                    // }
+                    if (!currentSubpage) { // main assignments and grades table
+                        var html = '<h1>Assignments</h1>' +
+                            '<table class="table table-hover border border-dark">' +
+                            '<thead class="thead-dark">' +
+                            '<tr><th>Assignment Name</th><th>Details</th><th>Status</th><th>Grade</th></tr>' +
+                            '</thead>' +
+                            '<tbody>';
+                        var assignments = currentClass.assignments;
+                        var totalScore = 0, maxScore = 0;
+                        for (var i in assignments) {
+                            var assignment = assignments[i];
+                            if (assignment.submission && assignment.submission.score) {
+                                // Running total of score
+                                totalScore += assignment.submission.score;
+                                maxScore += assignment.worth;
+                            }
+                            html += '<tr>' +
+                                '<td><a href="#' + currentClass.id + '/' + currentSection + '/' + assignment.name + '">' +
+                                assignment.name +
+                                '</a></td>' +
+                                '<td>' + assignment.type + '<br>Due ' + assignment.due + '</td>' +
+                                '<td>' + (assignment.submission ? assignment.submission.graded ?
+                                    'Graded<br>' + assignment.submission.graded :
+                                    'Submitted<br>' + assignment.submission.submitted :
+                                    'Not submitted yet') +
+                                '</td>' +
+                                '<td>' + (assignment.submission && assignment.submission.score ?
+                                    assignment.submission.score + '/' + assignment.worth + ' (' + (assignment.worth == 0 ?
+                                        100 :
+                                        Math.floor(assignment.submission.score / assignment.worth * 100)) +
+                                    '%)' :
+                                    assignment.worth + ' points available') +
+                                '</td>' +
+                                '</tr>'
+                        }
+                        html += '<tr><td>Total</td><td colspan="2"></td><td>' +
+                            totalScore + '/' + maxScore + ' (' + (maxScore == 0 ? 100 : Math.floor(totalScore / maxScore * 100)) + '%)' +
+                            '</td></tr>' +
+                            '</tbody>' +
+                            '</table>';
+                        content.html(html);
+                    } else { // display details about a specific assignment or test
+                        var assignment = currentClass.assignments.find(a => a.name == currentSubpage);
+                        if (!assignment) {
+                            content.html('<h1>Not Found</h1>The assignment you requested does not exist.');
+                            break;
+                        }
+                        var html = '<h1>' + assignment.name + '</h1>' +
+                            '<h5 class="mt-4 mb-0">Due date</h5>' + assignment.due +
+                            (assignment.submission && assignment.submission.score ?
+                                '<h5 class="mt-4 mb-0">Grade</h5>' + assignment.submission.score + '/' + assignment.worth + ' (' + (assignment.worth == 0 ?
+                                    100 :
+                                    Math.floor(assignment.submission.score / assignment.worth * 100)) + '%)' :
+                                '<h5 class="mt-4 mb-0">Points available</h5>' + assignment.worth
+                            ) +
+                            '<h5 class="mt-4 mb-0">Description</h5>' + assignment.description +
+                            (assignment.submission ?
+                                '<h5 class="mt-4 mb-0">Submission</h5>' +
+                                assignment.submission.content :
+                                '<div class="mt-4">' +
+                                '<button class="bg-light px-2 mr-3" onclick="alert(\'A text area would appear allowing the user to input their submission and click submit.\')">Write Text Submission</button>' +
+                                '<button class="bg-light px-2" onclick="alert(\'A file selection window would open and allow file(s) to be selected for upload. After reviewing these the user would be able to submit them for grading.\')">Upload Submission</button>' +
+                                '</div>'
+                            );
+                        content.html(html);
+                    }
+                    break;
+                case 'announcements':
+                    // Announcement format example:
+                    // {
+                    //     title: <String>,
+                    //     author: <String>,
+                    //     time: 'DDD dd/mm/yyyy hh:mm Z',
+                    //     content: <String>
+                    // }
+                    var html = '<div class="d-flex align-items-center">' +
+                    '<h1 class="d-inline-block">Announcements</h1>' +
+                    '<button class="bg-light px-2 ml-3" onclick="alert(\'This button will be visible only to class teachers. Clicking this will prompt for an announcement title and content. Rich text input will be accepted.\')">Add New</button>' +
+                    '</div>';
+                    for(var i in currentClass.announcements) {
+                        var announcement = currentClass.announcements[i];
+                        html += '<div class="mt-2 mb-4">' +
+                        '<h6><b><u>' + announcement.title + '</u> - </b><span class="text-muted"><b>' +
+                        announcement.author + '</b> - ' +
+                        announcement.time + '<span>' +
+                        '</h6>' +
+                        announcement.content +
+                        '</div>'
+                    }
+                    content.html(html);
+                    break;
             }
         }
-        // Switch to requested page from hash parameter
-        var classCode = window.location.hash.substr(1);
-        if(classCode && classes.hasOwnProperty(classCode)) switchPage(classes[classCode]);
-        else switchPage();
+        $(window).on('hashchange', function () {
+            // Switch to requested page from hash parameter
+            var hash = window.location.hash.substr(1).split('/');
+            var classCode = hash.shift();
+            var page = hash.join('/');
+            if (classCode && classes.hasOwnProperty(classCode)) switchPage(classes[classCode], page);
+            else switchPage();
+        }).trigger('hashchange');
     </script>
 </body>
 
