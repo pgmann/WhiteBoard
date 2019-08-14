@@ -169,7 +169,7 @@ var classes = {
                     '<u><b>Day 3</b> – Wednesday 26th June 2019</u>'
             },
             {
-                title: 'Tutorials / Practicals',
+                title: 'Practicals',
                 type: 'folder',
                 content: [
                     {

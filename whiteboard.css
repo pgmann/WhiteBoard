@@ -13,6 +13,7 @@ nav.sidebar {
 
 .sidebar .nav-link {
     color: black;
+    cursor: pointer;
 }
 
 a.bg-light.active {
@@ -49,9 +50,14 @@ a.bg-light.active {
     display: none;
 }
 
-#content .feed-icon {
-    width: 20px;
+.feed-icon, .sidebar .fa {
+    width: 15px;
     margin-right: 5px;
+    text-align: center;
+}
+
+.feed-icon {
+    width: 20px;
 }
 
 .faded {

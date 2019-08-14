@@ -108,22 +108,59 @@ function addToFeed(event) {
 
 // PAGE SWITCHING
 function updateActiveClass() {
-    $(".class-link").removeClass('active');
     if (!currentClass) {
+        $(".class-link").removeClass('active');
         $('.sidebar').hide();
     } else {
         // update navbar state
+        var sameClass = $(".class-link[href$='#" + currentClass.id + "']").hasClass('active');
+        $(".class-link").removeClass('active');
         $(".class-link[href$='#" + currentClass.id + "']").addClass('active');
         $('#class-name').text(currentClass.name);
         // update sidebar links
         $('.sidebar .home').attr('href', '#' + currentClass.id);
         $('.sidebar .assignments').attr('href', '#' + currentClass.id + '/assignments');
         $('.sidebar .announcements').attr('href', '#' + currentClass.id + '/announcements');
+        // load content folder sub entries
+        if(!sameClass) {
+            $('.sidebar .nav ul').remove();
+            loadContentFolder(currentClass.content, $('.sidebar .content'));
+        }
         // update sidebar state
         $('.sidebar').show();
-        $('.sidebar .nav-link').removeClass('active').filter('.' + currentSection).addClass('active');
-        // load content folder sub entries
-        $('.sidebar .content')
+        var activeLinkCandidates = $('.sidebar .nav-link').removeClass('active');
+        if(currentSection == 'content' && currentSubpage) {
+            // sections where the subpage path is active
+            activeLinkCandidates.filter("[href$='#" + currentClass.id + '/' + currentSection + '/' + currentSubpage + "']").addClass('active');
+        } else {
+            // sections where the section path remains active, even for subpages
+            activeLinkCandidates.filter('.' + currentSection).addClass('active');
+        }
+        // bind click event to folders
+        $('.sidebar .fa-folder, .sidebar .fa-folder-open').parent().unbind('click').click(function() {
+            $(this).children().toggleClass('fa-folder fa-folder-open');
+            $(this).next().toggle();
+        })
+    }
+}
+
+function loadContentFolder(content, parentFolder, path) {
+    if(!path) path = "";
+    var ul = $('<ul class="nav flex-column pl-3"></ul>');
+    $(parentFolder).after(ul);
+    if(path) ul.hide();
+    var li = $('<li class="nav-item"></li>');
+    ul.append(li);
+    for(var i in content) {
+        var child = content[i];
+        var iconName = child.type == 'forum' ? 'comment-alt' : child.type;
+        var href = child.type == 'folder' ? '' : 'href="#' + currentClass.id + '/content/' + path + child.title + '" ';
+
+        var a = $('<a ' + href + 'class="nav-link bg-light"><i class="fa fa-' + iconName + '"></i> ' + child.title + '</a>');
+        li.append(a);
+        if(child.type == 'folder') {
+            loadContentFolder(child.content, a, path + child.title + '/');
+        }
     }
 }
 
@@ -280,7 +317,19 @@ function switchPage(clazz, page) {
             break;
         case 'content':
             // Find and display file/forum content
+            var classContent = currentClass.content;
+            var path = currentSubpage.split('/');
+            for(var i in path) {
+                var child = classContent.find(c => c.title == path[i]);
+                if(child && child.type == 'folder') classContent = child.content;
+                if(i == path.length - 1) classContent = child;
+            }
 
+            if (!classContent || classContent.type == 'folder') {
+                content.html('<h1>Not Found</h1>The content you requested does not exist.');
+                break;
+            }
+            content.html('<h1>'+classContent.title+'</h1>'+classContent.content);
             break;
     }
 }
