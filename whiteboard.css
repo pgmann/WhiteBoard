@@ -1,0 +1,73 @@
+nav.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 1px 5px black;
+}
+
+nav.sidebar {
+    overflow-y: auto;
+    display: none;
+    height: 100%;
+}
+
+.sidebar .nav-link {
+    color: black;
+}
+
+a.bg-light.active {
+    background-color: #dae0e5!important;
+}
+
+@media (min-width: 992px) {
+    .pins {
+        flex-wrap: wrap;
+        max-height: 2.5em;
+        overflow: hidden;
+    }
+}
+
+@media (min-width: 768px) {
+    nav.sidebar {
+        height: calc(100vh - 56px);
+        position: sticky;
+        top: 56px;
+    }
+}
+
+#classes {
+    max-height: calc(100vh - 56px);
+    overflow: auto;
+}
+
+.fa-thumbtack {
+    cursor: pointer;
+}
+
+.fa-thumbtack:not(.pinned) {
+    color: lightgray;
+    display: none;
+}
+
+#content .feed-icon {
+    width: 20px;
+    margin-right: 5px;
+}
+
+.faded {
+    color: gray;
+}
+
+.lecturer-card {
+    display: flex;
+    word-break: break-all;
+}
+
+.lecturer-card .fa-user {
+    background: lightgray;
+    color: darkgray;
+    float: left;
+    padding: 25px;
+    margin-right: 10px;
+    margin-bottom: auto;
+}
