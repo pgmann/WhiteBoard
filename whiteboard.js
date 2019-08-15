@@ -123,7 +123,7 @@ function updateActiveClass() {
         $('.sidebar .assignments').attr('href', '#' + currentClass.id + '/assignments');
         $('.sidebar .announcements').attr('href', '#' + currentClass.id + '/announcements');
         // load content folder sub entries
-        if(!sameClass) {
+        if (!sameClass) {
             $('.sidebar .nav ul').remove();
             loadContentFolder(currentClass.content, $('.sidebar .content'));
         }
@@ -133,42 +133,42 @@ function updateActiveClass() {
         var activeLinkCandidates = $('.sidebar .nav-link').removeClass('active');
         var bestCandidate = [];
         var nextCandidateSubpage = currentSubpage.split('/');
-        while(bestCandidate.length == 0 && nextCandidateSubpage.length > 0) {
+        while (bestCandidate.length == 0 && nextCandidateSubpage.length > 0) {
             // ideally we want the most specific subpage displayed in the sidebar, but
             // threads/assignments aren't shown in the sidebar so a parent page may have to suffice
             bestCandidate = activeLinkCandidates.filter("[href$='#" + (currentClass.id + '/' + currentSection + '/' + nextCandidateSubpage.join('/')).replace(/\'/g, "\\\'") + "']");
             nextCandidateSubpage.pop();
         }
-        if(bestCandidate.length == 0) bestCandidate = $('.sidebar .' + currentSection); // default to section page if something weird happens
+        if (bestCandidate.length == 0) bestCandidate = $('.sidebar .' + currentSection); // default to section page if something weird happens
         bestCandidate.addClass('active');
         // bind click event to folders
-        $('.sidebar .fa-folder, .sidebar .fa-folder-open').parent().unbind('click').click(function() {
+        $('.sidebar .fa-folder, .sidebar .fa-folder-open').parent().unbind('click').click(function () {
             $(this).children().toggleClass('fa-folder fa-folder-open');
             $(this).next().toggle();
         })
         // open sub-folders to reveal the active item
-        bestCandidate.parents('ul.folder').each(function() {
+        bestCandidate.parents('ul.folder').each(function () {
             var folder = $(this).prev();
-            if(folder.children('.fa-folder').length) folder.click();
+            if (folder.children('.fa-folder').length) folder.click();
         });
     }
 }
 
 function loadContentFolder(content, parentFolder, path) {
-    if(!path) path = "";
+    if (!path) path = "";
     var ul = $('<ul class="nav folder flex-column pl-3"></ul>');
     $(parentFolder).after(ul);
-    if(path) ul.hide();
+    if (path) ul.hide();
     var li = $('<li class="nav-item"></li>');
     ul.append(li);
-    for(var i in content) {
+    for (var i in content) {
         var child = content[i];
         var iconName = child.type == 'forum' ? 'comment-alt' : child.type;
         var href = child.type == 'folder' ? '' : 'href="#' + currentClass.id + '/content/' + path + child.title + '" ';
 
         var a = $('<a ' + href + 'class="nav-link bg-light"><i class="fa fa-' + iconName + '"></i> ' + child.title + '</a>');
         li.append(a);
-        if(child.type == 'folder') {
+        if (child.type == 'folder') {
             loadContentFolder(child.content, a, path + child.title + '/');
         }
     }
@@ -310,20 +310,25 @@ function switchPage(clazz, page) {
             //     content: <String>
             // }
             var html = '<div class="d-flex flex-wrap align-items-center">' +
-            '<h1>Announcements</h1>' +
-            '<button class="bg-light px-2 ml-3 mb-2" onclick="alert(\'This button will be visible only to class teachers. Clicking this will prompt for an announcement title and content. Rich text input will be accepted.\')">Add New</button>' +
-            '</div>';
-            for(var i in currentClass.announcements) {
+                '<h1>Announcements</h1>' +
+                '<button class="bg-light px-2 ml-3 mb-2" onclick="alert(\'This button will be visible only to class teachers. Clicking this will prompt for an announcement title and content. Rich text input will be accepted.\')">Add New</button>' +
+                '</div>';
+            for (var i in currentClass.announcements) {
                 var announcement = currentClass.announcements[i];
-                html += '<div class="mt-2 mb-4">' +
-                '<h6><b><u>' + announcement.title + '</u> - </b><span class="text-muted"><b>' +
-                announcement.author + '</b> - ' +
-                announcement.time + '<span>' +
-                '</h6>' +
-                announcement.content +
-                '</div>'
+                html += '<div class="mt-2 mb-4' + (currentSubpage == announcement.title ? ' scroll-to' : '') + '">' +
+                    '<h6><b>';
+
+                if (currentSubpage == announcement.title) html += '<i class="fa fa-arrow-right text-primary"></i> ';
+
+                html += '<u>' + announcement.title + '</u> - </b><span class="text-muted"><b>' +
+                    announcement.author + '</b> - ' +
+                    announcement.time + '<span>' +
+                    '</h6>' +
+                    announcement.content +
+                    '</div>'
             }
             content.html(html);
+            if ($('.scroll-to').length) $(document).scrollTop($('.scroll-to').offset().top - 80);
             break;
         case 'content':
             // Content format example:
@@ -336,13 +341,13 @@ function switchPage(clazz, page) {
             // Find and display file/forum content
             var classContent = currentClass.content;
             var path = currentSubpage.split('/');
-            for(var i in path) {
+            for (var i in path) {
                 var child = classContent.find(c => c.title == path[i]);
-                if(child && (child.type == 'folder' || child.type == 'forum') && i < path.length - 1) classContent = child.content; // enter folder/forum
+                if (child && (child.type == 'folder' || child.type == 'forum') && i < path.length - 1) classContent = child.content; // enter folder/forum
                 else classContent = child; // select the final element
 
                 console.log(child);
-                if(child.type == 'thread') break; // anything below a thread name just refers to a post number to highlight
+                if (child.type == 'thread') break; // anything below a thread name just refers to a post number to highlight
             }
             console.log(classContent);
 
@@ -351,47 +356,50 @@ function switchPage(clazz, page) {
                 break;
             }
 
-            switch(classContent.type) {
+            switch (classContent.type) {
                 case 'file':
                     content.html('<div class="d-flex flex-wrap align-items-center">' +
-                    '<h1>'+classContent.title+'</h1>' +
-                    '<button class="bg-light px-2 ml-3 mb-2" onclick="alert(\'Clicking this button will download the file to the user\\\'s computer.\')">Download</button>' +
-                    '</div>'+classContent.content);
+                        '<h1>' + classContent.title + '</h1>' +
+                        '<button class="bg-light px-2 ml-3 mb-2" onclick="alert(\'Clicking this button will download the file to the user\\\'s computer.\')">Download</button>' +
+                        '</div>' + classContent.content);
                     break;
                 case 'forum':
                     var html = '<div class="d-flex flex-wrap align-items-center">' +
-                    '<h1>'+classContent.title+'</h1>' +
-                    '<button class="bg-light px-2 ml-3 mb-2" onclick="alert(\'Clicking this button will prompt for a thread title and first post content.\')">New Thread</button>' +
-                    '</div>';
+                        '<h1>' + classContent.title + '</h1>' +
+                        '<button class="bg-light px-2 ml-3 mb-2" onclick="alert(\'Clicking this button will prompt for a thread title and first post content.\')">New Thread</button>' +
+                        '</div>';
 
-                    for(var i in classContent.content) {
+                    for (var i in classContent.content) {
                         var thread = classContent.content[i];
                         var firstPost = thread.content[0];
 
                         html += '<div class="mt-2 mb-4">' +
-                        '<h6><b><u><a class="text-dark" href="#' + currentClass.id + '/' + currentSection + '/' + currentSubpage + '/' + thread.title + '">' + thread.title + '</a></u></b><span class="text-muted"><b> - ' + firstPost.author + '</b> - ' + firstPost.time + '</span></h6>' +
-                        firstPost.content +
-                        '</div>';
+                            '<h6><b><u><a class="text-dark" href="#' + currentClass.id + '/' + currentSection + '/' + currentSubpage + '/' + thread.title + '">' + thread.title + '</a></u></b><span class="text-muted"><b> - ' + firstPost.author + '</b> - ' + firstPost.time + '</span></h6>' +
+                            firstPost.content +
+                            '</div>';
                     }
 
                     content.html(html);
                     break;
                 case 'thread':
                     var html = '<div class="d-flex flex-wrap align-items-center">' +
-                    '<h1>'+classContent.title+'</h1>' +
-                    '<button class="bg-light px-2 ml-3 mb-2" onclick="alert(\'Clicking this button will prompt for post content which will then be submitted as a reply to this thread.\')">Reply</button>' +
-                    '</div>';
+                        '<h1>' + classContent.title + '</h1>' +
+                        '<button class="bg-light px-2 ml-3 mb-2" onclick="alert(\'Clicking this button will prompt for post content which will then be submitted as a reply to this thread.\')">Reply</button>' +
+                        '</div>';
 
-                    for(var i in classContent.content) {
+                    var lastSubpage = path[path.length - 1];
+                    for (var i in classContent.content) {
+                        var focusThis = lastSubpage != classContent.title && lastSubpage == parseInt(i) + 1;
                         var post = classContent.content[i];
 
-                        html += '<div class="mt-2 mb-4">' +
-                        '<h6><b>' + post.author + '</b> - ' + post.time + '</h6>' +
-                        post.content +
-                        '</div>';
+                        html += '<div class="mt-2 mb-4' + (focusThis ? ' scroll-to' : '') + '">' +
+                            '<h6><b>' + (focusThis ? '<i class="fa fa-arrow-right text-primary"></i> ' : '') + post.author + '</b> - ' + post.time + '</h6>' +
+                            post.content +
+                            '</div>';
                     }
 
                     content.html(html);
+                    if ($('.scroll-to').length) $(document).scrollTop($('.scroll-to').offset().top - 80);
                     break;
             }
             break;
