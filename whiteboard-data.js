@@ -205,8 +205,18 @@ var classes = {
                         content: [
                             {
                                 author: 'Dr Gaye Lightbody',
-                                time: 'Wed 26/06/2019 22:57 BST',
+                                time: 'Thu 29/06/2017 11:22 BST',
                                 content: '2016 - CHI - RapID-Low_Latency_Interactive_Objects_with_RFID_Tags_Paper.pdf (4.459 MB)'
+                            },
+                            {
+                                author: 'Peter Gordon',
+                                time: 'Fri 28/06/2019 10:05 BST',
+                                content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lectus sit amet est placerat in egestas. Commodo viverra maecenas accumsan lacus vel facilisis volutpat.'
+                            },
+                            {
+                                author: 'Michael Dunwoody',
+                                time: 'Mon 01/07/2019 13:27 BST',
+                                content: 'Arcu dui vivamus arcu felis bibendum ut. Pharetra diam sit amet nisl suscipit. Ac tortor vitae purus faucibus ornare. Volutpat diam ut venenatis tellus in metus vulputate eu scelerisque. Condimentum vitae sapien pellentesque habitant morbi. Elit eget gravida cum sociis natoque penatibus. Etiam sit amet nisl purus.'
                             }
                         ]
                     },
@@ -216,7 +226,7 @@ var classes = {
                         content: [
                             {
                                 author: 'Dr Gaye Lightbody',
-                                time: 'Wed 26/06/2019 22:57 BST',
+                                time: 'Thu 29/06/2017 11:27 BST',
                                 content: 'Please review and comment on this paper.<br>CHI2016_MomentaryPleasures.pdf (659.467 KB)'
                             }
                         ]
@@ -227,7 +237,7 @@ var classes = {
                         content: [
                             {
                                 author: 'Dr Gaye Lightbody',
-                                time: 'Wed 26/06/2019 22:57 BST',
+                                time: 'Thu 29/06/2017 11:28 BST',
                                 content: 'Please review and comment on this paper.<br>p4447-gerling.pdf (1.106 MB)'
                             }
                         ]

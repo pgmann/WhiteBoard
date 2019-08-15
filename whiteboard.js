@@ -129,24 +129,32 @@ function updateActiveClass() {
         // update sidebar state
         $('.sidebar').show();
         var activeLinkCandidates = $('.sidebar .nav-link').removeClass('active');
-        if(currentSection == 'content' && currentSubpage) {
-            // sections where the subpage path is active
-            activeLinkCandidates.filter("[href$='#" + currentClass.id + '/' + currentSection + '/' + currentSubpage + "']").addClass('active');
-        } else {
-            // sections where the section path remains active, even for subpages
-            activeLinkCandidates.filter('.' + currentSection).addClass('active');
+        var bestCandidate = [];
+        var nextCandidateSubpage = currentSubpage.split('/');
+        while(bestCandidate.length == 0 && nextCandidateSubpage.length > 0) {
+            // ideally we want the most specific subpage displayed in the sidebar, but
+            // threads/assignments aren't shown in the sidebar so a parent page may have to suffice
+            bestCandidate = activeLinkCandidates.filter("[href$='#" + (currentClass.id + '/' + currentSection + '/' + nextCandidateSubpage.join('/')).replace(/\'/g, "\\\'") + "']");
+            nextCandidateSubpage.pop();
         }
+        if(bestCandidate.length == 0) bestCandidate = $('.sidebar .' + currentSection); // default to section page if something weird happens
+        bestCandidate.addClass('active');
         // bind click event to folders
         $('.sidebar .fa-folder, .sidebar .fa-folder-open').parent().unbind('click').click(function() {
             $(this).children().toggleClass('fa-folder fa-folder-open');
             $(this).next().toggle();
         })
+        // open sub-folders to reveal the active item
+        bestCandidate.parents('ul.folder').each(function() {
+            var folder = $(this).prev();
+            if(folder.children('.fa-folder').length) folder.click();
+        });
     }
 }
 
 function loadContentFolder(content, parentFolder, path) {
     if(!path) path = "";
-    var ul = $('<ul class="nav flex-column pl-3"></ul>');
+    var ul = $('<ul class="nav folder flex-column pl-3"></ul>');
     $(parentFolder).after(ul);
     if(path) ul.hide();
     var li = $('<li class="nav-item"></li>');
@@ -321,15 +329,58 @@ function switchPage(clazz, page) {
             var path = currentSubpage.split('/');
             for(var i in path) {
                 var child = classContent.find(c => c.title == path[i]);
-                if(child && child.type == 'folder') classContent = child.content;
-                if(i == path.length - 1) classContent = child;
+                if(child && Array.isArray(child.content) && i < path.length - 1) classContent = child.content;
+                else classContent = child;
             }
 
             if (!classContent || classContent.type == 'folder') {
                 content.html('<h1>Not Found</h1>The content you requested does not exist.');
                 break;
             }
-            content.html('<h1>'+classContent.title+'</h1>'+classContent.content);
+
+            switch(classContent.type) {
+                case 'file':
+                    content.html('<div class="d-flex align-items-center">' +
+                    '<h1 class="d-inline-block">'+classContent.title+'</h1>' +
+                    '<button class="bg-light px-2 ml-3" onclick="alert(\'Clicking this button will download the file to the user\\\'s computer.\')">Download</button>' +
+                    '</div>'+classContent.content);
+                    break;
+                case 'forum':
+                    var html = '<div class="d-flex align-items-center">' +
+                    '<h1 class="d-inline-block">'+classContent.title+'</h1>' +
+                    '<button class="bg-light px-2 ml-3" onclick="alert(\'Clicking this button will prompt for a thread title and first post content.\')">New Thread</button>' +
+                    '</div>';
+
+                    for(var i in classContent.content) {
+                        var thread = classContent.content[i];
+                        var firstPost = thread.content[0];
+
+                        html += '<div class="mt-2 mb-4">' +
+                        '<h6><b><u><a class="text-dark" href="#' + currentClass.id + '/' + currentSection + '/' + currentSubpage + '/' + thread.title + '">' + thread.title + '</a></u></b><span class="text-muted"><b> - ' + firstPost.author + '</b> - ' + firstPost.time + '</span></h6>' +
+                        firstPost.content +
+                        '</div>';
+                    }
+
+                    content.html(html);
+                    break;
+                case 'thread':
+                    var html = '<div class="d-flex align-items-center">' +
+                    '<h1 class="d-inline-block">'+classContent.title+'</h1>' +
+                    '<button class="bg-light px-2 ml-3" onclick="alert(\'Clicking this button will prompt for post content which will then be submitted as a reply to this thread.\')">Reply</button>' +
+                    '</div>';
+
+                    for(var i in classContent.content) {
+                        var post = classContent.content[i];
+
+                        html += '<div class="mt-2 mb-4">' +
+                        '<h6><b>' + post.author + '</b> - ' + post.time + '</h6>' +
+                        post.content +
+                        '</div>';
+                    }
+
+                    content.html(html);
+                    break;
+            }
             break;
     }
 }
