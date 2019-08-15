@@ -294,7 +294,7 @@ function switchPage(clazz, page) {
                         '<h5 class="mt-4 mb-0">Submission</h5>' +
                         assignment.submission.content :
                         '<div class="mt-4">' +
-                        '<button class="bg-light px-2 mr-3 mb-3" onclick="alert(\'A text area would appear allowing the user to input their submission and click submit.\')">Write Text Submission</button>' +
+                        '<button class="bg-light px-2 mr-3 mb-2" onclick="alert(\'A text area would appear allowing the user to input their submission and click submit.\')">Write Text Submission</button>' +
                         '<button class="bg-light px-2" onclick="alert(\'A file selection window would open and allow file(s) to be selected for upload. After reviewing these the user would be able to submit them for grading.\')">Upload Submission</button>' +
                         '</div>'
                     );
@@ -311,7 +311,7 @@ function switchPage(clazz, page) {
             // }
             var html = '<div class="d-flex flex-wrap align-items-center">' +
             '<h1>Announcements</h1>' +
-            '<button class="bg-light px-2 ml-3 mb-3" onclick="alert(\'This button will be visible only to class teachers. Clicking this will prompt for an announcement title and content. Rich text input will be accepted.\')">Add New</button>' +
+            '<button class="bg-light px-2 ml-3 mb-2" onclick="alert(\'This button will be visible only to class teachers. Clicking this will prompt for an announcement title and content. Rich text input will be accepted.\')">Add New</button>' +
             '</div>';
             for(var i in currentClass.announcements) {
                 var announcement = currentClass.announcements[i];
@@ -355,13 +355,13 @@ function switchPage(clazz, page) {
                 case 'file':
                     content.html('<div class="d-flex flex-wrap align-items-center">' +
                     '<h1>'+classContent.title+'</h1>' +
-                    '<button class="bg-light px-2 ml-3 mb-3" onclick="alert(\'Clicking this button will download the file to the user\\\'s computer.\')">Download</button>' +
+                    '<button class="bg-light px-2 ml-3 mb-2" onclick="alert(\'Clicking this button will download the file to the user\\\'s computer.\')">Download</button>' +
                     '</div>'+classContent.content);
                     break;
                 case 'forum':
                     var html = '<div class="d-flex flex-wrap align-items-center">' +
                     '<h1>'+classContent.title+'</h1>' +
-                    '<button class="bg-light px-2 ml-3 mb-3" onclick="alert(\'Clicking this button will prompt for a thread title and first post content.\')">New Thread</button>' +
+                    '<button class="bg-light px-2 ml-3 mb-2" onclick="alert(\'Clicking this button will prompt for a thread title and first post content.\')">New Thread</button>' +
                     '</div>';
 
                     for(var i in classContent.content) {
@@ -379,7 +379,7 @@ function switchPage(clazz, page) {
                 case 'thread':
                     var html = '<div class="d-flex flex-wrap align-items-center">' +
                     '<h1>'+classContent.title+'</h1>' +
-                    '<button class="bg-light px-2 ml-3 mb-3" onclick="alert(\'Clicking this button will prompt for post content which will then be submitted as a reply to this thread.\')">Reply</button>' +
+                    '<button class="bg-light px-2 ml-3 mb-2" onclick="alert(\'Clicking this button will prompt for post content which will then be submitted as a reply to this thread.\')">Reply</button>' +
                     '</div>';
 
                     for(var i in classContent.content) {
