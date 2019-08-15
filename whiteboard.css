@@ -36,9 +36,18 @@ a.bg-light.active {
     }
 }
 
+#content {
+    overflow-wrap: break-word;
+}
+
 #classes {
     max-height: calc(100vh - 56px);
+    max-width: calc(100vw - 2rem);
     overflow: auto;
+}
+
+#classes .dropdown-item {
+    min-width: fit-content;
 }
 
 .fa-thumbtack {
@@ -48,6 +57,10 @@ a.bg-light.active {
 .fa-thumbtack:not(.pinned) {
     color: lightgray;
     display: none;
+}
+
+.feed-item a {
+    
 }
 
 .feed-icon, .sidebar .fa {

@@ -106,11 +106,11 @@ var classes = {
                 name: 'Coursework 1',
                 description: 'A class test covering topics from the first 3 day block',
                 type: 'Test',
-                due: '10/10/2018 17:00',
+                due: '05/08/2019 17:00',
                 submission: {
                     content: 'This is my test. Most of the answers are correct.',
-                    submitted: '08/10/2018 14:32',
-                    graded: '16/10/2018 14:01',
+                    submitted: '05/08/2019 13:39',
+                    graded: '09/08/2019 13:59',
                     score: 19
                 },
                 worth: 20
@@ -270,32 +270,33 @@ function loadFeed() {
     // Load initial entries into feed
     addToFeed({
         type: 'assignment',
-        class: 'COM308 Human Computer Interaction',
-        title: 'CW2 Storyboards',
-        time: new Date(2019, 8, 5, 17, 0, 0)
+        class: 'COM308',
+        title: 'Coursework 2',
+        time: new Date(2019, 8, 23, 17, 0, 0)
     });
     addToFeed({
         type: 'grade',
-        class: 'COM308 Human Computer Interaction',
-        title: 'Class Test',
-        time: Date.now()
+        class: 'COM308',
+        title: 'Coursework 1',
+        time: new Date(2019, 8, 9, 13, 59)
     });
     addToFeed({
         type: 'announcement',
-        class: 'COM308 Human Computer Interaction',
+        class: 'COM308',
         title: 'See you all in August!',
-        time: Date.now()
+        time: new Date(2019, 6, 26, 16, 2)
     });
     addToFeed({
         type: 'content',
-        class: 'COM308 Human Computer Interaction',
-        title: 'Lecture - slides on universal design',
+        class: 'COM308',
+        title: 'Lecture 1 - The Humanisation of ICT',
         time: Date.now()
     });
     addToFeed({
         type: 'comment',
-        class: 'COM308 Human Computer Interaction',
-        title: 'Peter Gordon - This is a test',
+        class: 'COM308',
+        title: 'Peter Gordon - Lorem ipsum dolor sit amet...',
+        link: 'Feedback Forum/Paper 2: RapID/2',
         time: Date.now()
     });
 }

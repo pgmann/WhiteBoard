@@ -51,21 +51,21 @@ function updatePins() {
 // event format
 // {
 //      type: 'assignment/grade/announcement/content/comment',
-//      class: 'COM308 Human Computer Interaction',
+//      class: <module code>,
 //      title: '<text>',
 //      time: <date/time>
 // }
 function addToFeed(event) {
     // Create elements for feed row
     var row = document.createElement('div');
-    row.classList.add('mb-3');
+    row.classList.add('mb-3', 'feed-item');
     var icon = document.createElement('i');
     icon.classList.add('fa', 'feed-icon');
     row.appendChild(icon);
     var text = document.createElement('span');
     row.appendChild(text);
     var module = document.createElement('span');
-    module.innerText = ' - ' + event.class;
+    module.innerText = ' - ' + classes[event.class].name;
     module.classList.add('faded');
     row.appendChild(module);
     $('#content').append(row);
@@ -81,27 +81,27 @@ function addToFeed(event) {
             if (event.time.getMinutes() != 0) timeOptions.minute = '2-digit';
             if (event.time.getSeconds() != 0) timeOptions.second = '2-digit';
             var time = event.time.toLocaleString(undefined, timeOptions).replace(/ /g, '');
-            text.innerHTML = 'Assignment <b>' + event.title + '</b> due on <b>' + date + '</b> at <b>' + time + '</b>';
+            text.innerHTML = 'Assignment <b><a class="text-dark" href="#' + event.class + '/assignments/' + event.title + '">' + event.title + '</a></b> due on <b>' + date + '</b> at <b>' + time + '</b>';
             break;
 
         case 'grade':
             icon.classList.add('fa-star');
-            text.innerHTML = 'Grade available for <b>' + event.title + '</b>';
+            text.innerHTML = 'Grade available for <b><a class="text-dark" href="#' + event.class + '/assignments/' + event.title + '">' + event.title + '</a></b>';
             break;
 
         case 'announcement':
             icon.classList.add('fa-bullhorn');
-            text.innerHTML = 'Class announcement - <b>' + event.title + '</b>';
+            text.innerHTML = 'Class announcement - <b><a class="text-dark" href="#' + event.class + '/announcements/' + event.title + '">' + event.title + '</a></b>';
             break;
 
         case 'content':
             icon.classList.add('fa-plus-square');
-            text.innerHTML = 'New class content added - <b>' + event.title + '</b>';
+            text.innerHTML = 'New class content added - <b><a class="text-dark" href="#' + event.class + '/content/' + event.title + '">' + event.title + '</a></b>';
             break;
 
         case 'comment':
             icon.classList.add('fa-comment-alt');
-            text.innerHTML = 'Comment posted by <b>' + event.title + '</b>';
+            text.innerHTML = 'Comment posted by <b><a class="text-dark" href="#' + event.class + '/content/' + event.link + '">' + event.title + '</a></b>';
             break;
     }
 }
@@ -111,6 +111,7 @@ function updateActiveClass() {
     if (!currentClass) {
         $(".class-link").removeClass('active');
         $('.sidebar').hide();
+        $('#content').removeClass('col-md-9 col-lg-10');
     } else {
         // update navbar state
         var sameClass = $(".class-link[href$='#" + currentClass.id + "']").hasClass('active');
@@ -128,6 +129,7 @@ function updateActiveClass() {
         }
         // update sidebar state
         $('.sidebar').show();
+        $('#content').addClass('col-md-9 col-lg-10');
         var activeLinkCandidates = $('.sidebar .nav-link').removeClass('active');
         var bestCandidate = [];
         var nextCandidateSubpage = currentSubpage.split('/');
@@ -234,7 +236,7 @@ function switchPage(clazz, page) {
             // }
             if (!currentSubpage) { // main assignments and grades table
                 var html = '<h1>Assignments</h1>' +
-                    '<table class="table table-hover border border-dark">' +
+                    '<table class="table table-responsive-sm table-hover border border-dark">' +
                     '<thead class="thead-dark">' +
                     '<tr><th>Assignment Name</th><th>Details</th><th>Status</th><th>Grade</th></tr>' +
                     '</thead>' +
@@ -292,7 +294,7 @@ function switchPage(clazz, page) {
                         '<h5 class="mt-4 mb-0">Submission</h5>' +
                         assignment.submission.content :
                         '<div class="mt-4">' +
-                        '<button class="bg-light px-2 mr-3" onclick="alert(\'A text area would appear allowing the user to input their submission and click submit.\')">Write Text Submission</button>' +
+                        '<button class="bg-light px-2 mr-3 mb-3" onclick="alert(\'A text area would appear allowing the user to input their submission and click submit.\')">Write Text Submission</button>' +
                         '<button class="bg-light px-2" onclick="alert(\'A file selection window would open and allow file(s) to be selected for upload. After reviewing these the user would be able to submit them for grading.\')">Upload Submission</button>' +
                         '</div>'
                     );
@@ -307,9 +309,9 @@ function switchPage(clazz, page) {
             //     time: 'DDD dd/mm/yyyy hh:mm Z',
             //     content: <String>
             // }
-            var html = '<div class="d-flex align-items-center">' +
-            '<h1 class="d-inline-block">Announcements</h1>' +
-            '<button class="bg-light px-2 ml-3" onclick="alert(\'This button will be visible only to class teachers. Clicking this will prompt for an announcement title and content. Rich text input will be accepted.\')">Add New</button>' +
+            var html = '<div class="d-flex flex-wrap align-items-center">' +
+            '<h1>Announcements</h1>' +
+            '<button class="bg-light px-2 ml-3 mb-3" onclick="alert(\'This button will be visible only to class teachers. Clicking this will prompt for an announcement title and content. Rich text input will be accepted.\')">Add New</button>' +
             '</div>';
             for(var i in currentClass.announcements) {
                 var announcement = currentClass.announcements[i];
@@ -324,14 +326,25 @@ function switchPage(clazz, page) {
             content.html(html);
             break;
         case 'content':
+            // Content format example:
+            // content: [
+            // {
+            //     title: 'Schedule',
+            //     type: '<file/folder/forum/thread/post>',
+            //     content: <array/string>
+            // }
             // Find and display file/forum content
             var classContent = currentClass.content;
             var path = currentSubpage.split('/');
             for(var i in path) {
                 var child = classContent.find(c => c.title == path[i]);
-                if(child && Array.isArray(child.content) && i < path.length - 1) classContent = child.content;
-                else classContent = child;
+                if(child && (child.type == 'folder' || child.type == 'forum') && i < path.length - 1) classContent = child.content; // enter folder/forum
+                else classContent = child; // select the final element
+
+                console.log(child);
+                if(child.type == 'thread') break; // anything below a thread name just refers to a post number to highlight
             }
+            console.log(classContent);
 
             if (!classContent || classContent.type == 'folder') {
                 content.html('<h1>Not Found</h1>The content you requested does not exist.');
@@ -340,15 +353,15 @@ function switchPage(clazz, page) {
 
             switch(classContent.type) {
                 case 'file':
-                    content.html('<div class="d-flex align-items-center">' +
-                    '<h1 class="d-inline-block">'+classContent.title+'</h1>' +
-                    '<button class="bg-light px-2 ml-3" onclick="alert(\'Clicking this button will download the file to the user\\\'s computer.\')">Download</button>' +
+                    content.html('<div class="d-flex flex-wrap align-items-center">' +
+                    '<h1>'+classContent.title+'</h1>' +
+                    '<button class="bg-light px-2 ml-3 mb-3" onclick="alert(\'Clicking this button will download the file to the user\\\'s computer.\')">Download</button>' +
                     '</div>'+classContent.content);
                     break;
                 case 'forum':
-                    var html = '<div class="d-flex align-items-center">' +
-                    '<h1 class="d-inline-block">'+classContent.title+'</h1>' +
-                    '<button class="bg-light px-2 ml-3" onclick="alert(\'Clicking this button will prompt for a thread title and first post content.\')">New Thread</button>' +
+                    var html = '<div class="d-flex flex-wrap align-items-center">' +
+                    '<h1>'+classContent.title+'</h1>' +
+                    '<button class="bg-light px-2 ml-3 mb-3" onclick="alert(\'Clicking this button will prompt for a thread title and first post content.\')">New Thread</button>' +
                     '</div>';
 
                     for(var i in classContent.content) {
@@ -364,9 +377,9 @@ function switchPage(clazz, page) {
                     content.html(html);
                     break;
                 case 'thread':
-                    var html = '<div class="d-flex align-items-center">' +
-                    '<h1 class="d-inline-block">'+classContent.title+'</h1>' +
-                    '<button class="bg-light px-2 ml-3" onclick="alert(\'Clicking this button will prompt for post content which will then be submitted as a reply to this thread.\')">Reply</button>' +
+                    var html = '<div class="d-flex flex-wrap align-items-center">' +
+                    '<h1>'+classContent.title+'</h1>' +
+                    '<button class="bg-light px-2 ml-3 mb-3" onclick="alert(\'Clicking this button will prompt for post content which will then be submitted as a reply to this thread.\')">Reply</button>' +
                     '</div>';
 
                     for(var i in classContent.content) {
