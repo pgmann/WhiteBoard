@@ -124,6 +124,7 @@ function updateActiveClass() {
         $('.sidebar .announcements').attr('href', '#' + currentClass.id + '/announcements');
         // load content folder sub entries
         if (!sameClass) {
+            $('.content i').removeClass('fa-folder').addClass('fa-folder-open'); // 'reopen' main content folder
             $('.sidebar .nav ul').remove();
             loadContentFolder(currentClass.content, $('.sidebar .content'));
         }
