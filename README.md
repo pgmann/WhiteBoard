@@ -5,7 +5,7 @@ Most VLEs have a huge feature list with features hidden in obscure locations dee
 This web app is designed to show how much simpler the Virtual Learning Environment (VLE) can be for a student.
 
 ## Try it!
-Browse [the demo](pgmann.github.io/whiteboard), hosted using GitHub Pages.
+Browse [the demo](https://pgmann.github.io/WhiteBoard/), hosted using GitHub Pages.
 
 ## Tech Stack
 This project is written purely in JS, CSS and HTML. No server side processing is applied to the output.
